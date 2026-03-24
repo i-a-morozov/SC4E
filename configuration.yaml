@@ -1,0 +1,250 @@
+# CS Elettra configuration (python), I.M., 03.2026
+
+# Magnet groups
+
+# bend       -- pure bending magnets
+# corr       -- standalone correctors
+# quad       -- pure and shifted quadrupole magnets
+# sext       -- pure sextupole magnets
+# sext_corr  -- sextupoles with embedded correctors
+# sext_skew  -- sextupoles with embedded skew correctors
+# octu_corr  -- octupoles with embedded correctors
+# octu_quad  -- octupoles with embedded quadrupole correctors
+
+# ID knobs
+
+# QF_S*_0{1, 4} and QD_S*_0{2, 3} (global tune)
+# OCT_S*_02, QF_S*_02, QD_S*_02, QD_S*_03, QF_S*_03, OCT_S*_03 (normal)
+# SD_S*_05, SH_S*_02, SH_S*_03, SD_S*_06 (skew)
+
+error_table:
+
+  # corrector, quadrupole, sextupole and octupole errors (sigma)
+
+  magnet_dx:                  30.0e-6   # -- horizontal shift error (m)
+  magnet_dy:                  30.0e-6   # -- vertical shift error (m)
+  magnet_roll:                50.0e-6   # -- roll angle error (rad)
+  magnet_calibration:         3.0e-4    # -- amplitude calibration error
+  corrector_calibration:      1.0e-2    # -- amplitude calibration error (corrector)
+
+  # dipole errors (sigma)
+
+  dipole_dx:                  50.0e-6   # -- horizontal shift error (m)
+  dipole_dy:                  50.0e-6   # -- vertical shift error (m)
+  dipole_roll:                100.0e-6  # -- roll angle error (rad)
+  dipole_calibration:         1.0e-4    # -- amplituded calibration error
+
+  # bpm errors (sigma)
+
+  bpm_dx:                     150.0e-6  # -- horizontal shift error (m)
+  bpm_dy:                     150.0e-6  # -- vertical shift error (m)
+  bpm_roll:                   150.0e-6  # -- roll angle error (rad)
+  bpm_calibration:            1.0e-2    # -- amplitude calibration error
+  bpm_orbit_noise:            1.0e-6    # -- orbit noise (m)
+  bpm_tbt_noise:              50.0e-6   # -- tbt noise (m)
+
+  # girder errors (sigma)
+
+  girder_dx:                  100.0e-6  # -- horizontal shift error (m)
+  girder_dy:                  100.0e-6  # -- vertical shift error (m)
+  girder_roll:                100.0e-6  # -- roll angle error (m)
+
+  # rf errors (sigma)
+
+  rf_frequency:               1.0e+2    # -- rf frequency error (Hz)
+  rf_voltage:                 6.0e+3    # -- rf amplitude error (V)
+  rf_phase:                   9.0e+1    # -- rf phase error (deg)
+
+  # circumference error (sigma)
+
+  circumference_error:        1.0e-6    # -- circumference error
+
+# parameters
+
+parameters:
+  corrector_x_max:            8.0e-4    # -- horizontal corrector angle limit
+  corrector_y_max:            5.0e-4    # -- vertical corrector angle limit
+
+# injection
+
+injection:
+  x:                          0.0       # -- injected beam horizontal offset (m)
+  px:                         0.0       # -- injected beam horizontal angle
+  y:                          0.0       # -- injected beam vertical offset (m)
+  py:                         0.0       # -- injected beam vertical angle
+  tau:                        0.0       # -- injected bunch longitudinal offset (m)
+  delta:                      0.0       # -- injected bunch relative energy
+  x_error_syst:               2.0e-4    # -- systematic horizontal injection error (m)
+  px_error_syst:              1.5e-4    # -- systematic horizontal angle error
+  y_error_syst:               2.0e-4    # -- systematic vertical injection error (m)
+  py_error_syst:              1.0e-4    # -- systematic vertical angle error
+  tau_error_syst:             0.0       # -- systematic longitudinal error (m)
+  delta_error_syst:           1.0e-3    # -- systematic energy error
+  x_error_stat:               5.0e-5    # -- random horizontal injection jitter (m)
+  px_error_stat:              5.0e-6    # -- random horizontal angle jitter
+  y_error_stat:               5.0e-6    # -- random vertical injection jitter (m)
+  py_error_stat:              2.0e-6    # -- random vertical angle jitter
+  tau_error_stat:             1.67e-4   # -- random longitudinal jitter (m)
+  delta_error_stat:           1.0e-4    # -- random energy jitter
+  emit_x:                     140.0e-9  # -- horizontal emittance (m rad)
+  emit_y:                     14.0e-9   # -- vertical emittance (m rad)
+  bunch_length:               2.5e-3    # -- rms bunch length (m)
+  energy_spread:              1.0e-3    # -- rms relative energy spread
+  n_particles:                1         # -- number of particles
+
+# lattice
+
+lattice:
+  lattice_file:               lattice.mat
+  simulator:                  at
+  use:                        RING
+
+# magnets
+
+magnets:
+
+  bend:
+    regex: ^B_
+    components:
+      - B1L: dipole_calibration
+    dx: dipole_dx
+    dy: dipole_dy
+    roll: dipole_roll
+
+  corr:
+    regex: ^CH
+    components:
+      - B1L: corrector_calibration
+      - A1L: corrector_calibration
+    limits:
+      - B1L: corrector_x_max
+      - A1L: corrector_y_max
+    dx: magnet_dx
+    dy: magnet_dy
+    roll: magnet_roll
+
+  quad:
+    regex: ^QD|^QF|^QAB
+    components:
+      - B2L: magnet_calibration
+    dx: magnet_dx
+    dy: magnet_dy
+    roll: magnet_roll
+
+  sext:
+    regex: ^SF_.*_(02|03|04|05)$
+    components:
+      - B3L: magnet_calibration
+    dx: magnet_dx
+    dy: magnet_dy
+    roll: magnet_roll
+
+  sext_corr:
+    regex: ^SF_.*_(01|06)$|^SD_.*_(01|02|03|04|07|08|09|10)$|^SH_.*_(01|04)$
+    components:
+      - B1L: corrector_calibration
+      - A1L: corrector_calibration
+      - B3L: magnet_calibration
+    limits:
+      - B1L: corrector_x_max
+      - A1L: corrector_y_max
+    dx: magnet_dx
+    dy: magnet_dy
+    roll: magnet_roll
+
+  sext_skew:
+    regex: ^SD_.*_(05|06)$|^SH_.*_(02|03)$
+    components:
+      - A2L: magnet_calibration
+      - B3L: magnet_calibration
+    dx: magnet_dx
+    dy: magnet_dy
+    roll: magnet_roll
+
+  octu_corr:
+    regex: ^OCT_.*_(01|04)$
+    components:
+      - B1L: corrector_calibration
+      - A1L: corrector_calibration
+      - B2L: magnet_calibration
+      - B4L: magnet_calibration
+    limits:
+      - B1L: corrector_x_max
+      - A1L: corrector_y_max
+    dx: magnet_dx
+    dy: magnet_dy
+    roll: magnet_roll
+
+  octu_quad:
+    regex: ^OCT_.*_(02|03)$
+    components:
+      - B2L: magnet_calibration
+      - B4L: magnet_calibration
+    dx: magnet_dx
+    dy: magnet_dy
+    roll: magnet_roll
+
+rf:
+  main:
+    regex: ^CAV
+    voltage: null
+    phase: null
+    frequency: null
+
+bpms:
+  bpms:
+    regex: ^BPM
+    calibration_error: bpm_calibration
+    orbit_noise: bpm_orbit_noise
+    tbt_noise: bpm_tbt_noise
+    dx: bpm_dx
+    dy: bpm_dy
+    roll: bpm_roll
+
+supports:
+  - level: 1
+    name: girder
+    start_endpoints:
+      regex: ^gs
+    end_endpoints:
+      regex: ^ge
+    alignment: absolute
+    dx: girder_dx
+    dy: girder_dy
+    roll: girder_roll
+
+tuning:
+
+  HCORR:
+    - corr: B1L
+    - sext_corr: B1L
+    - octu_corr: B1L
+    
+  VCORR:
+    - corr: A1L
+    - sext_corr: A1L
+    - octu_corr: A1L
+
+  model_RM_folder: ./data
+
+  multipoles:
+    - octu_corr: B4L
+    - octu_quad: B4L
+    - sext_corr: B3L
+    - sext: B3L
+    - sext_skew: B3L
+
+  bba_magnets:
+    - quad: B2L
+
+  tune:
+    controls_1:
+      regex: ^QD_S.*_0[23]$
+      component: B2L
+    controls_2:
+      regex: ^QF_S.*_0[14]$
+      component: B2L
+
+  c_minus:
+    controls:
+      - sext_skew: A2L
