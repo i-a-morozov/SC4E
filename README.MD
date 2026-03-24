@@ -2,24 +2,29 @@
 
 SC scripts taylored to Elettra 2.0
 
-## Getting Started
+## Clone and generate response data
 
 ```bash
 git clone https://github.com/i-a-morozov/SC4E.git
-mkdir -p elettra/data
-python elettra/make/responces.py
-python elettra/make/knobs.py
+cd SC4E
+mkdir -p data
+python make/responces.py
+python make/knobs.py
 ```
 
-```bash
-cd /home/morozov/SOFT/SimCom_petraIV/elettra
+## Generate lattice
 
+```bash
 python scripts/000_generate.py \
   --config configuration.yaml \
   --data data \
   --machine elettra \
   --seed 1
+```
 
+## Perform beam threading
+
+```bash
 python scripts/001_thread.py \
   --machine elettra \
   --get 00 \
