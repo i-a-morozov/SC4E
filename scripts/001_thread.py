@@ -3,7 +3,7 @@
 '''
 Example:
 
-python scripts/000_generate.py --seed=1 --factor=2.0
+python scripts/000_generate.py --seed=1 --factor=1.5
 python scripts/001_thread.py --seed=1 --get=00 --set=01 --number-of-iterations=16 --run-injection-correction --run-last-corrector-wiggle --injection-regularization=100 --plot
 python scripts/001_thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-tune-correction --run-injection-correction --injection-regularization=50 --plot
 python scripts/001_thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-injection-correction --injection-regularization=50 --injection-gain=0.5 --plot
