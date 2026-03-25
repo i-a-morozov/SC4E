@@ -1,4 +1,4 @@
-# CS Elettra configuration (python), I.M., 03.2026
+# CS Elettra configuration (python), I.M. & S.D., 03.2026
 
 # Magnet groups
 
@@ -112,7 +112,7 @@ magnets:
     roll: dipole_roll
 
   corr:
-    regex: ^CH
+    regex: ^CH|^CV|^CFH|^CFV
     components:
       - B1L: corrector_calibration
       - A1L: corrector_calibration
@@ -132,7 +132,7 @@ magnets:
     roll: magnet_roll
 
   sext:
-    regex: ^SF_.*_(02|03|04|05)$
+    regex: ^SF_.*\.(02|03|04|05)$
     components:
       - B3L: magnet_calibration
     dx: magnet_dx
@@ -140,7 +140,7 @@ magnets:
     roll: magnet_roll
 
   sext_corr:
-    regex: ^SF_.*_(01|06)$|^SD_.*_(01|02|03|04|07|08|09|10)$|^SH_.*_(01|04)$
+    regex: ^SF_.*\.(01|06)$|^SD_.*\.(01|02|03|04|07|08|09|10)$|^SH_.*\.(01|04)$
     components:
       - B1L: corrector_calibration
       - A1L: corrector_calibration
@@ -153,7 +153,7 @@ magnets:
     roll: magnet_roll
 
   sext_skew:
-    regex: ^SD_.*_(05|06)$|^SH_.*_(02|03)$
+    regex: ^SD_.*\.(05|06)$|^SH_.*\.(02|03)$
     components:
       - A2L: magnet_calibration
       - B3L: magnet_calibration
@@ -162,7 +162,7 @@ magnets:
     roll: magnet_roll
 
   octu_corr:
-    regex: ^OCT_.*_(01|04)$
+    regex: ^OCT_.*\.(01|04)$
     components:
       - B1L: corrector_calibration
       - A1L: corrector_calibration
@@ -176,7 +176,7 @@ magnets:
     roll: magnet_roll
 
   octu_quad:
-    regex: ^OCT_.*_(02|03)$
+    regex: ^OCT_.*\.(02|03)$
     components:
       - B2L: magnet_calibration
       - B4L: magnet_calibration
@@ -186,7 +186,7 @@ magnets:
 
 rf:
   main:
-    regex: ^CAV
+    regex: RF
     voltage: null
     phase: null
     frequency: null
@@ -205,9 +205,9 @@ supports:
   - level: 1
     name: girder
     start_endpoints:
-      regex: ^gs
+      regex: ^GS
     end_endpoints:
-      regex: ^ge
+      regex: ^GE
     alignment: absolute
     dx: girder_dx
     dy: girder_dy
@@ -239,10 +239,10 @@ tuning:
 
   tune:
     controls_1:
-      regex: ^QD_S.*_0[23]$
+      regex: ^QD_S.*\.0[23]$
       component: B2L
     controls_2:
-      regex: ^QF_S.*_0[14]$
+      regex: ^QF_S.*\.0[14]$
       component: B2L
 
   c_minus:
