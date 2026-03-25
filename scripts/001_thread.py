@@ -8,6 +8,7 @@ python scripts/001_thread.py --seed=1 --get=00 --set=01 --number-of-iterations=1
 python scripts/001_thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-tune-correction --run-injection-correction --injection-regularization=50 --plot
 python scripts/001_thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-injection-correction --injection-regularization=50 --injection-gain=0.5 --plot
 python scripts/001_thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-injection-correction --injection-regularization=50 --injection-gain=0.5 --injection-number-of-turns=2 --plot
+python scripts/001_thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-tune-correction --run-injection-correction --injection-regularization=50 --injection-number-of-turns=2 --number-of-particles=256 --plot
 '''
 
 import argparse
@@ -31,6 +32,7 @@ def parser():
     parser.add_argument('--rewrite', action='store_true', help='overwrite the loaded input stage')
     parser.add_argument('--number-of-iterations', type=int, default=10, help='total number of iterations')
     parser.add_argument('--number-of-particles', type=int, default=1, help='number of particles')
+    parser.add_argument('--transmission-threshold', type=float, default=0.4, help='beam transmission threshold')
     parser.add_argument('--enable-multipoles', action='store_true', help='flag to enable multipoles')
     parser.add_argument('--run-tune-correction', action='store_true', help='flag to run tune correction')
     parser.add_argument('--tune-number-of-iterations', type=int, default=1, help='number of tune correction iterations')
@@ -169,7 +171,10 @@ def main():
     sc.tuning.set_multipole_scale(scale=0.0)
     if arguments.enable_multipoles:
         sc.tuning.set_multipole_scale(scale=1.0)
+
     sc.injection.n_particles = arguments.number_of_particles
+    if sc.injection.n_particles > 1:
+        sc.bpm_system.transmission_threshold = arguments.transmission_threshold
 
     data_x = []
     data_y = []
