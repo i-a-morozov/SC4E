@@ -4,7 +4,8 @@
 
 # bend       -- pure bending magnets
 # corr       -- standalone correctors
-# quad       -- pure and shifted quadrupole magnets
+# quad       -- pure quadrupole magnets
+# quad_bend  -- shifted quadrupole magnets
 # sext       -- pure sextupole magnets
 # sext_corr  -- sextupoles with embedded correctors
 # sext_skew  -- sextupoles with embedded skew correctors
@@ -124,7 +125,15 @@ magnets:
     roll: magnet_roll
 
   quad:
-    regex: ^QD|^QF|^QAB
+    regex: ^QD|^QF
+    components:
+      - B2L: magnet_calibration
+    dx: magnet_dx
+    dy: magnet_dy
+    roll: magnet_roll
+
+  quad_bend:
+    regex: ^QAB
     components:
       - B2L: magnet_calibration
     dx: magnet_dx
@@ -228,14 +237,15 @@ tuning:
   model_RM_folder: ./data
 
   multipoles:
-    - octu_corr: B4L
-    - octu_quad: B4L
     - sext_corr: B3L
     - sext: B3L
     - sext_skew: B3L
+    - octu_corr: B4L
+    - octu_quad: B4L
 
   bba_magnets:
     - quad: B2L
+    - quad_bend: B2L
 
   tune:
     controls_1:
