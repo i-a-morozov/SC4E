@@ -134,6 +134,7 @@ magnets:
 
   quad_bend:
     regex: ^QAB
+    shifted: true 
     components:
       - B2L: magnet_calibration
     dx: magnet_dx
