@@ -3,12 +3,12 @@
 '''
 Example:
 
-python scripts/000_generate.py --seed=1 --factor=1.5
-python scripts/001_thread.py --seed=1 --get=00 --set=01 --number-of-iterations=16 --run-injection-correction --run-last-corrector-wiggle --injection-regularization=100 --plot
-python scripts/001_thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-tune-correction --run-injection-correction --injection-regularization=50 --plot
-python scripts/001_thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-injection-correction --injection-regularization=50 --injection-gain=0.5 --plot
-python scripts/001_thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-injection-correction --injection-regularization=50 --injection-gain=0.5 --injection-number-of-turns=2 --plot
-python scripts/001_thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-tune-correction --run-injection-correction --injection-regularization=50 --injection-number-of-turns=2 --number-of-particles=256 --plot
+python scripts/generate.py --seed=1 --factor=1.5
+python scripts/thread.py --seed=1 --get=00 --set=01 --number-of-iterations=16 --run-injection-correction --run-last-corrector-wiggle --injection-regularization=100 --plot
+python scripts/thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-tune-correction --run-injection-correction --injection-regularization=50 --plot
+python scripts/thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-injection-correction --injection-regularization=50 --injection-gain=0.5 --plot
+python scripts/thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-injection-correction --injection-regularization=50 --injection-gain=0.5 --injection-number-of-turns=2 --plot
+python scripts/thread.py --seed=1 --get=01 --set=01 --rewrite --number-of-iterations=16 --run-tune-correction --run-injection-correction --injection-regularization=50 --injection-number-of-turns=2 --number-of-particles=256 --plot
 '''
 
 import argparse
@@ -187,7 +187,14 @@ def main():
         figure = plt.figure(num=1, figsize=(12, 8))
         update(figure, sc, arguments, data_x, data_y, 0, 'initial', arguments.get, stage, corrector_x_max, corrector_y_max)
         sleep(arguments.sleep)
-        
+
+    from sklearn.linear_model import Ridge
+    solver = Ridge(
+        alpha=arguments.injection_regularization**2,
+        fit_intercept=False,
+        solver="svd",
+    )
+
     for iteration in range(arguments.number_of_iterations):
 
         if arguments.run_tune_correction:
@@ -208,6 +215,13 @@ def main():
                 n_turns=arguments.injection_number_of_turns,
                 gain=arguments.injection_gain
             )
+            # sc.tuning.correct_injection(
+            #    method='solver',
+            #    solver=solver,
+            #    n_reps=arguments.injection_number_of_repetitions,
+            #    n_turns=arguments.injection_number_of_turns,
+            #    gain=arguments.injection_gain
+            #)
             if arguments.plot:
                 update(figure, sc, arguments, data_x, data_y, iteration + 1, 'injection', arguments.get, stage, corrector_x_max, corrector_y_max)
 
