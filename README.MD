@@ -15,7 +15,7 @@ python make/knobs.py
 ## Generate lattice
 
 ```bash
-python scripts/000_generate.py \
+python scripts/generate.py \
   --config configuration.yaml \
   --data data \
   --machine elettra \
@@ -25,7 +25,7 @@ python scripts/000_generate.py \
 ## Perform beam threading
 
 ```bash
-python scripts/001_thread.py \
+python scripts/thread.py \
   --machine elettra \
   --get 00 \
   --set 01 \
